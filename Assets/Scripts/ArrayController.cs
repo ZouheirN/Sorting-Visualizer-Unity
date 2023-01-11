@@ -5,12 +5,12 @@ using System.Linq;
 using UnityEditor.TextCore.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class ArrayController : MonoBehaviour
 {
     public int[] array;
     public GameObject pillarPrefab;
+    public Button sortButton;
 
     private int i;
     private int j;
@@ -24,14 +24,20 @@ public class ArrayController : MonoBehaviour
     Dropdown dropdown;
     ReadInput readSizeInput;
     ReadSpeedInput readSpeedInput;
+    
 
     private void Awake() {
         readSizeInput = GetComponent<ReadInput>();
         readSpeedInput = GetComponent<ReadSpeedInput>();
         dropdown = GameObject.Find("List").GetComponent<Dropdown>();
+        sortButton.interactable = false;
+
     }
 
     public void GenerateArray() {
+        sortButton.interactable = true;
+        sortButton.GetComponentInChildren<Text>().text = "Sort Array";
+
         running = false;
         i = 0;
         j = 1;
@@ -77,6 +83,8 @@ public class ArrayController : MonoBehaviour
 
     public void OnSortClick() {
         if (dropdown.SortSelector() == 0 && !IsSorted(this.array)) {
+            sortButton.interactable = false;
+            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
             for (int i = 0; i < readSpeedInput.GetInput(); i++) {
                 StartCoroutine(BubbleSort(0.001f));
             }
@@ -99,8 +107,10 @@ public class ArrayController : MonoBehaviour
             // Do your code
             OneBubbleSort(this.array);
 
-            if (IsSorted(this.array))
+            if (IsSorted(this.array)) {
                 running = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorted!";
+            }
 
             // wait for seconds
             yield return new WaitForSeconds(time);
