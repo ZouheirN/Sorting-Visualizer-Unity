@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.TextCore.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -13,6 +14,12 @@ public class ArrayController : MonoBehaviour
 
     private int i;
     private int j;
+    bool running;
+
+    [Header("Colors")]
+    public Material tempColor;
+    public Material nextColor;
+    public Material checkColor;
 
     Dropdown dropdown;
     ReadInput readInput;
@@ -23,6 +30,7 @@ public class ArrayController : MonoBehaviour
     }
 
     public void GenerateArray() {
+        running = false;
         i = 0;
         j = 1;
 
@@ -30,43 +38,42 @@ public class ArrayController : MonoBehaviour
 
         DestroyWithTag("pillar");
 
-        /*float[] range = { -0.5f };
-
-        if (this.array.Length != 1) {
-            range = linspace(-0.5f, 0.5f, this.array.Length);
-        }*/
-
 
         for (int i = 0; i < this.array.Length; i++) {
             float denom = (float)i/this.array.Length;
             this.array[i] = UnityEngine.Random.Range(0, 60);
             var newObj = GameObject.Instantiate(pillarPrefab);
             newObj.transform.parent = GameObject.Find("Bar").transform;
-            newObj.transform.localPosition = new Vector3(-0.5f + denom, 0.5f,0);
-            newObj.transform.localScale = new Vector3((float)1/this.array.Length, this.array[i] % 60, 1);
+            /*newObj.transform.localPosition = new Vector3(-0.5f + denom, 0.5f,0);
+            newObj.transform.localScale = new Vector3((float)1/this.array.Length, this.array[i] % 60, 1);*/
+            newObj.GetComponent<Pillar>().value = array[i];
+            newObj.GetComponent<Pillar>().offset = denom;
+            newObj.GetComponent<Pillar>().size = array.Length;
         }
+
+        
     }
 
-    IEnumerator WaitForSpecificSeconds(float seconds) {
-        array = OneBubbleSort(this.array);
-        yield return new WaitForSeconds(seconds);
-    }
+    public bool IsSorted(int[] a) {
+        List<GameObject> pillars = new List<GameObject>();
+        foreach (Transform tran in GameObject.Find("Bar").transform) {
+            pillars.Add(tran.gameObject);
+        }
 
-    public bool IsSorted(int[] array) {
-        for (int i = 1; i < array.Length; i++) {
-            if (array[i-1] > array[i]) {
-                return false;
+        for (int i = 0; i < a.Length - 1; i++) {
+            pillars[i].GetComponent<Pillar>().Color = checkColor;
+            pillars[i+1].GetComponent<Pillar>().Color = checkColor;
+            if (a[i] > a[i + 1]) {
+                return false; // It is proven that the array is not sorted.
             }
         }
-        return true;
+
+        return true; // If this part has been reached, the array must be sorted.
     }
 
     public void OnSortClick() {
-        if (dropdown.SortSelector() == 0) {
-            while(!IsSorted(this.array)) {
-                StartCoroutine(WaitForSpecificSeconds(0.2f));
-            }
-            
+        if (dropdown.SortSelector() == 0 && !IsSorted(this.array)) {
+            StartCoroutine(BubbleSort(0.001f));
         }
     }
 
@@ -77,26 +84,55 @@ public class ArrayController : MonoBehaviour
             Destroy(oneObject);
     }
 
-    /*public static float[] linspace(float startval, float endval, int steps) {
-        float interval = (endval / MathF.Abs(endval)) * MathF.Abs(endval - startval) / (steps - 1);
-        return (from val in Enumerable.Range(0, steps)
-                select startval + (val * interval)).ToArray();
-    }*/
+    IEnumerator BubbleSort(float time) {
+
+        // Set the function as running
+        running = true;
+
+        // Do the job until running is set to false
+        while (running) {
+            // Do your code
+            OneBubbleSort(this.array);
+
+            if (IsSorted(this.array))
+                running = false;
+
+            // wait for seconds
+            yield return new WaitForSeconds(time);
+        }
+    }
+
+
+
     public int[] OneBubbleSort(int[] array) {
 
+        List<GameObject> pillars = new List<GameObject>();
+        foreach (Transform tran in GameObject.Find("Bar").transform) {
+            pillars.Add(tran.gameObject);
+        }
+
+        //int length = pillars[0].GetComponentInChildren<Pillar>().size;
         int length = array.Length;
 
         int temp = array[0];
+        //int t = pillars[0].GetComponentInChildren<Pillar>().value;
 
         if (i < length) {
            if (j < length) {
                 if (array[i] > array[j]) {
+                //if (pillars[i].GetComponentInChildren<Pillar>().value > pillars[j].GetComponentInChildren<Pillar>().value) { 
+
                     temp = array[i];
+                    //t = pillars[i].GetComponentInChildren<Pillar>().value;
+                    pillars[i].GetComponentInChildren<MeshRenderer>().material = tempColor;
 
                     array[i] = array[j];
+                    //pillars[i].GetComponentInChildren<Pillar>().value = pillars[j].GetComponentInChildren<Pillar>().value;
+                    pillars[j].GetComponentInChildren<MeshRenderer>().material = nextColor;
+                    DisplayArray(array);
 
                     array[j] = temp;
-
+                    //pillars[j].GetComponentInChildren<Pillar>().value = t;
                     DisplayArray(array);
                 }
                 j++;
@@ -112,40 +148,6 @@ public class ArrayController : MonoBehaviour
         return array;
     }
 
-    public int[] BubbleSort(int[] array) {
-
-        /*List<GameObject> pillars = new List<GameObject>();
-        foreach (Transform tran in GameObject.Find("Bar").transform) {
-            pillars.Add(tran.gameObject);
-        }*/
-
-        int length = array.Length;
-
-        int temp = array[0];
-        //Vector3 pillarsTemp = pillars[0].transform.localPosition;
-
-        for (int i = 0; i < length; i++) {
-            for (int j = i + 1; j < length; j++) {
-                if (array[i] > array[j]) {
-                    temp = array[i];
-                    //pillarsTemp = pillars[i].transform.localPosition;
-
-                    array[i] = array[j];
-                    //pillars[i].transform.localPosition = pillars[j].transform.localPosition;
-
-                    array[j] = temp;
-                    //pillars[j].transform.localPosition = pillarsTemp;
-
-                    //another idea: display pillars after every step instead of swapping them
-                    DisplayArray(array);
-                }
-
-            }
-        }
-
-        return array;
-    }
-
     public void DisplayArray(int[] array) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
@@ -153,29 +155,9 @@ public class ArrayController : MonoBehaviour
         }
 
         for (int i = 0; i < array.Length; i++) {
-            pillars[i].transform.localScale = new Vector3(pillars[i].transform.localScale.x, array[i]%60, 1);
+            pillars[i].GetComponent<Pillar>().value = array[i];
+            //pillars[i].transform.localScale = new Vector3(pillars[i].transform.localScale.x, array[i]%60, 1);
         }
 
     }
-
-
-
-    /*    public void swap(int pos1, int pos2) {
-            List<GameObject> pillars = new List<GameObject>();
-            foreach (Transform tran in GameObject.Find("Bar").transform) {
-                pillars.Add(tran.gameObject);
-            }
-
-            Vector3 pillarsTemp = pillars[0].transform.localPosition;
-            Vector3 pillarsTempScale = pillars[0].transform.localScale;
-
-            pillarsTemp = pillars[pos1].transform.localPosition;
-            pillarsTempScale.y = pillars[pos1].transform.localScale.y;
-
-            pillars[pos1].transform.localPosition = pillars[pos2].transform.localPosition;
-            pillars[pos1].transform.localScale.y = pillars[pos2].transform.localScale.y;
-
-            pillars[pos2].transform.localPosition = pillarsTemp;
-            pillars[pos2].transform.localScale.y = pillarsTempScale.y;
-        }*/
 }

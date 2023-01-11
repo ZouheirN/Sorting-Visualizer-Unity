@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class Pillar : MonoBehaviour
 {
-    ArrayController arrayController;
     public GameObject pillar;
+    public GameObject pivotPillar;
+    public int value;
+    public float offset;
+    public int size;
+    public Material Color;
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
-        arrayController = FindObjectOfType<ArrayController>();
+        pivotPillar.transform.localPosition = new Vector3(-0.5f + offset, 0.5f,0);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        //pillar.transform.localScale = new Vector3(arrayController.array[0], 0, 0);
+        pivotPillar.transform.localScale = new Vector3((float)1 / size, value % 60, 1);
+        pillar.GetComponent<MeshRenderer>().material = Color;
     }
 }

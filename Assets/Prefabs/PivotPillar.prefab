@@ -46,6 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pillar: {fileID: 3274017796157743083}
+  pivotPillar: {fileID: 120797137349955691}
+  value: 0
+  offset: 0
+  size: 0
+  Color: {fileID: 2100000, guid: 0914e9f407c7f4e4f935234608141c2d, type: 2}
 --- !u!1001 &8940381033972674981
 PrefabInstance:
   m_ObjectHideFlags: 0
