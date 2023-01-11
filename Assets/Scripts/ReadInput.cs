@@ -8,7 +8,7 @@ public class ReadInput : MonoBehaviour
     private string input;
     private int output;
 
-    public void ReadStringInput(string s) {
+    public void ReadSizeInput(string s) {
         input = s;
         Debug.Log(Convert.ToInt32(input));
         output = Convert.ToInt32(s);

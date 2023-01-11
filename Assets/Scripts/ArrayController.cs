@@ -22,10 +22,12 @@ public class ArrayController : MonoBehaviour
     public Material checkColor;
 
     Dropdown dropdown;
-    ReadInput readInput;
+    ReadInput readSizeInput;
+    ReadSpeedInput readSpeedInput;
 
     private void Awake() {
-        readInput = GetComponent<ReadInput>();
+        readSizeInput = GetComponent<ReadInput>();
+        readSpeedInput = GetComponent<ReadSpeedInput>();
         dropdown = GameObject.Find("List").GetComponent<Dropdown>();
     }
 
@@ -34,7 +36,7 @@ public class ArrayController : MonoBehaviour
         i = 0;
         j = 1;
 
-        this.array = new int[readInput.GetInput()];
+        this.array = new int[readSizeInput.GetInput()];
 
         DestroyWithTag("pillar");
 
@@ -71,9 +73,13 @@ public class ArrayController : MonoBehaviour
         return true; // If this part has been reached, the array must be sorted.
     }
 
+
+
     public void OnSortClick() {
         if (dropdown.SortSelector() == 0 && !IsSorted(this.array)) {
-            StartCoroutine(BubbleSort(0.001f));
+            for (int i = 0; i < readSpeedInput.GetInput(); i++) {
+                StartCoroutine(BubbleSort(0.001f));
+            }
         }
     }
 
@@ -85,7 +91,6 @@ public class ArrayController : MonoBehaviour
     }
 
     IEnumerator BubbleSort(float time) {
-
         // Set the function as running
         running = true;
 
@@ -101,8 +106,6 @@ public class ArrayController : MonoBehaviour
             yield return new WaitForSeconds(time);
         }
     }
-
-
 
     public int[] OneBubbleSort(int[] array) {
 
