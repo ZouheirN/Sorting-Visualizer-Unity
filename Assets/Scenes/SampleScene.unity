@@ -1189,7 +1189,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Speed over 200 is not recommended, continue at your own risk.
+  m_Text: Speed 10 is the max, going over won't do anything.
 --- !u!222 &640820431
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2395,6 +2395,7 @@ MonoBehaviour:
   tempColor: {fileID: 2100000, guid: 05c3bb984822d234eaafab9345a3cc39, type: 2}
   nextColor: {fileID: 2100000, guid: 37ca2a070038b3f44890b824cca9c960, type: 2}
   checkColor: {fileID: 2100000, guid: e2223e31129a4fe4bb61866ad04e61d7, type: 2}
+  swapColor: {fileID: 2100000, guid: de0711c89d0c68a4284c3108ee22aa8f, type: 2}
 --- !u!114 &1458718198
 MonoBehaviour:
   m_ObjectHideFlags: 0

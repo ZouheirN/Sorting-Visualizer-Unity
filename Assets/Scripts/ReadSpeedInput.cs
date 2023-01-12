@@ -19,7 +19,7 @@ public class ReadSpeedInput : MonoBehaviour
         input = s;
         Debug.Log(Convert.ToInt32(input));
         output = Convert.ToInt32(s);
-        if (output > 200) {
+        if (output > 10) {
             warningText.SetActive(true);
         } else {
             warningText.SetActive(false);
