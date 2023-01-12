@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.TextCore.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,8 +38,6 @@ public class ArrayController : MonoBehaviour
         sortButton.GetComponentInChildren<Text>().text = "Sort Array";
 
         running = false;
-        i = 0;
-        j = 1;
 
         this.array = new int[readSizeInput.GetInput()];
 
@@ -54,9 +51,10 @@ public class ArrayController : MonoBehaviour
             newObj.transform.parent = GameObject.Find("Bar").transform;
             /*newObj.transform.localPosition = new Vector3(-0.5f + denom, 0.5f,0);
             newObj.transform.localScale = new Vector3((float)1/this.array.Length, this.array[i] % 60, 1);*/
-            newObj.GetComponent<Pillar>().value = array[i];
+            //newObj.GetComponent<Pillar>().value = array[i];
             newObj.GetComponent<Pillar>().offset = denom;
             newObj.GetComponent<Pillar>().size = array.Length;
+            newObj.GetComponent<Pillar>().pos = i;
         }
 
         
@@ -83,10 +81,28 @@ public class ArrayController : MonoBehaviour
 
     public void OnSortClick() {
         if (dropdown.SortSelector() == 0 && !IsSorted(this.array)) {
+            i = 0;
+            j = 1;
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
             for (int i = 0; i < readSpeedInput.GetInput(); i++) {
                 StartCoroutine(BubbleSort(0.001f));
+            }
+        } else if (dropdown.SortSelector() == 1 && !IsSorted(this.array)) {
+            i = 0;
+            j = 1;
+            sortButton.interactable = false;
+            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+            for (int i = 0; i < readSpeedInput.GetInput(); i++) {
+                StartCoroutine(SelectionSort(0.001f));
+            }
+        } else if (dropdown.SortSelector() == 2 && !IsSorted(this.array)) {
+            i = 1;
+            j = 0;
+            sortButton.interactable = false;
+            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+            for (int i = 0; i < readSpeedInput.GetInput(); i++) {
+                StartCoroutine(InsertionSort(0.001f));
             }
         }
     }
@@ -142,11 +158,11 @@ public class ArrayController : MonoBehaviour
                     array[i] = array[j];
                     //pillars[i].GetComponentInChildren<Pillar>().value = pillars[j].GetComponentInChildren<Pillar>().value;
                     pillars[j].GetComponentInChildren<MeshRenderer>().material = nextColor;
-                    DisplayArray(array);
+                    //DisplayArray(array);
 
                     array[j] = temp;
                     //pillars[j].GetComponentInChildren<Pillar>().value = t;
-                    DisplayArray(array);
+                    //DisplayArray(array);
                 }
                 j++;
            }
@@ -161,16 +177,133 @@ public class ArrayController : MonoBehaviour
         return array;
     }
 
-    public void DisplayArray(int[] array) {
+    /*    public void DisplayArray(int[] array) {
+            List<GameObject> pillars = new List<GameObject>();
+            foreach (Transform tran in GameObject.Find("Bar").transform) {
+                pillars.Add(tran.gameObject);
+            }
+
+            for (int i = 0; i < array.Length; i++) {
+                pillars[i].GetComponent<Pillar>().value = array[i];
+                //pillars[i].transform.localScale = new Vector3(pillars[i].transform.localScale.x, array[i]%60, 1);
+            }
+
+        }*/
+
+    IEnumerator SelectionSort(float time) {
+        // Set the function as running
+        running = true;
+
+        // Do the job until running is set to false
+        while (running) {
+            // Do your code
+            OneSelectionSort(this.array);
+
+            if (IsSorted(this.array)) {
+                running = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorted!";
+            }
+
+            // wait for seconds
+            yield return new WaitForSeconds(time);
+        }
+    }
+
+    public int[] OneSelectionSort(int[] array) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
         }
 
-        for (int i = 0; i < array.Length; i++) {
-            pillars[i].GetComponent<Pillar>().value = array[i];
-            //pillars[i].transform.localScale = new Vector3(pillars[i].transform.localScale.x, array[i]%60, 1);
+        var arrayLength = array.Length;
+        //for (int i = 0; i < arrayLength - 1; i++) {
+        if (i < arrayLength - 1) { 
+            var smallestVal = i;
+            //for (int j = i + 1; j < arrayLength; j++) {
+            if (j < arrayLength) { 
+                if (array[j] < array[smallestVal]) {
+                    smallestVal = j;
+                }
+                j++;
+            }
+            var tempVar = array[smallestVal];
+            pillars[smallestVal].GetComponentInChildren<MeshRenderer>().material = tempColor;
+
+            array[smallestVal] = array[i];
+            pillars[i].GetComponentInChildren<MeshRenderer>().material = nextColor;
+
+            array[i] = tempVar;
         }
 
+        if (!(j < arrayLength)) {
+            i++;
+            j = i + 1;
+        }
+
+
+        return array;
     }
+
+    IEnumerator InsertionSort(float time) {
+        // Set the function as running
+        running = true;
+
+        // Do the job until running is set to false
+        while (running) {
+            // Do your code
+            OneInsertionSort(this.array);
+
+            if (IsSorted(this.array)) {
+                running = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorted!";
+            }
+
+            // wait for seconds
+            yield return new WaitForSeconds(time);
+        }
+    }
+
+    int flag;
+    int val;
+    public int[] OneInsertionSort(int[] arr) {
+        
+
+/*        //for (i = 1; i < arr.Length; i++) {
+        if (i < arr.Length) {
+            val = arr[i];
+            flag = 0;
+            //for (j = i - 1; j >= 0 && flag != 1;) {
+            if (j >= 0 && flag != 1) {
+                if (val < arr[j]) {
+                    arr[j + 1] = arr[j];
+                    j--;
+                    arr[j + 1] = val;
+                } else flag = 1;
+            }
+        }*/
+
+        for (i = 1; i < arr.Length; i++) {
+            val = arr[i];
+            flag = 0;
+            for (j = i - 1; j >= 0 && flag != 1;) {
+                if (val < arr[j]) {
+                    arr[j + 1] = arr[j];
+                    j--;
+                    arr[j + 1] = val;
+                } else flag = 1;
+                break;
+            }
+            break;
+        }
+
+        if (!(j >= 0 && flag != 1)) {
+            i++;
+            j = i - 1;
+        } else {
+            
+        }
+
+        return arr;
+    }
+
 }
