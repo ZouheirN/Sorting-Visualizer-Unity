@@ -10,8 +10,6 @@ public class ArrayController : MonoBehaviour {
     public GameObject pillarPrefab;
     public Button sortButton;
 
-    private int i;
-    private int j;
     bool running;
 
     [Header("Colors")]
@@ -81,20 +79,16 @@ public class ArrayController : MonoBehaviour {
 
     public void OnSortClick() {
         if (dropdown.SortSelector() == 0 && !IsSorted(this.array)) {
-            i = 0;
-            j = 1;
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
             for (int i = 0; i < readSpeedInput.GetInput(); i++) {
-                StartCoroutine(BubbleSort(0.001f));
+                StartCoroutine(BubbleSort(this.array, 0.01f / (float)readSpeedInput.GetInput()));
             }
         } else if (dropdown.SortSelector() == 1 && !IsSorted(this.array)) {
-            i = 0;
-            j = 1;
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
             for (int i = 0; i < readSpeedInput.GetInput(); i++) {
-                StartCoroutine(SelectionSort(0.001f));
+                //StartCoroutine(SelectionSort(this.array, 0.01f / (float)readSpeedInput.GetInput()));
             }
         } else if (dropdown.SortSelector() == 2 && !IsSorted(this.array)) {
             sortButton.interactable = false;
@@ -110,7 +104,7 @@ public class ArrayController : MonoBehaviour {
             Destroy(oneObject);
     }
 
-    IEnumerator BubbleSort(float time) {
+/*    IEnumerator BubbleSort(float time) {
         // Set the function as running
         running = true;
 
@@ -127,9 +121,9 @@ public class ArrayController : MonoBehaviour {
             // wait for seconds
             yield return new WaitForSeconds(time);
         }
-    }
+    }*/
 
-    public int[] OneBubbleSort(int[] array) {
+ /*   public int[] OneBubbleSort(int[] array) {
 
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
@@ -173,7 +167,7 @@ public class ArrayController : MonoBehaviour {
         return array;
     }
 
-    /*    public void DisplayArray(int[] array) {
+    *//*    public void DisplayArray(int[] array) {
             List<GameObject> pillars = new List<GameObject>();
             foreach (Transform tran in GameObject.Find("Bar").transform) {
                 pillars.Add(tran.gameObject);
@@ -184,7 +178,7 @@ public class ArrayController : MonoBehaviour {
                 //pillars[i].transform.localScale = new Vector3(pillars[i].transform.localScale.x, array[i]%60, 1);
             }
 
-        }*/
+        }*//*
 
     IEnumerator SelectionSort(float time) {
         // Set the function as running
@@ -238,7 +232,7 @@ public class ArrayController : MonoBehaviour {
 
 
         return array;
-    }
+    }*/
 
     /*    IEnumerator InsertionSort(float time) {
             // Set the function as running
@@ -258,6 +252,54 @@ public class ArrayController : MonoBehaviour {
                 yield return new WaitForSeconds(time);
             }
         }*/
+
+    IEnumerator BubbleSort(int[] arr, float time) {
+        List<GameObject> pillars = new List<GameObject>();
+        foreach (Transform tran in GameObject.Find("Bar").transform) {
+            pillars.Add(tran.gameObject);
+        }
+
+        running = true;
+
+        while (running) {
+            int out_var, in_var;
+
+            for (out_var = arr.Length - 1; out_var > 0; out_var--) {
+                yield return new WaitForSeconds(time);
+                for (in_var = 0; in_var < out_var; in_var++) {
+                    yield return new WaitForSeconds(time);
+                    pillars[in_var].GetComponent<Pillar>().Color = tempColor;
+                    if (in_var - 1 >= 0 && in_var < array.Length)
+                        pillars[in_var-1].GetComponent<Pillar>().Color = tempColor;
+                    if (arr[in_var] > arr[in_var + 1]) {
+                        yield return new WaitForSeconds(time);
+                        int temp = arr[in_var];
+                        
+                        
+
+                        yield return new WaitForSeconds(time);
+                        arr[in_var] = arr[in_var + 1];
+                        pillars[in_var].GetComponent<Pillar>().Color = tempColor;
+
+
+                        yield return new WaitForSeconds(time);
+                        arr[in_var + 1] = temp;
+                        pillars[in_var + 1].GetComponent<Pillar>().Color = checkColor;
+                        //pillars[in_var].GetComponent<Pillar>().Color = checkColor;
+                    }
+
+/*                    if (IsSorted(this.array)) {
+                        running = false;
+                        sortButton.GetComponentInChildren<Text>().text = "Sorted!";
+                    }*/
+                }
+                if (IsSorted(this.array)) {
+                    running = false;
+                    sortButton.GetComponentInChildren<Text>().text = "Sorted!";
+                }
+            }
+        }
+    }
 
 
     IEnumerator InsertionSort(int[] arr, float time) {
@@ -283,20 +325,16 @@ public class ArrayController : MonoBehaviour {
                 while (in_var > 0 && arr[in_var - 1] >= temp) {
                     yield return new WaitForSeconds(time);
                     arr[in_var] = arr[in_var - 1];
-                    //pillars[in_var].GetComponentInChildren<MeshRenderer>().material = nextColor;
-
 
                     pillars[in_var].GetComponent<Pillar>().Color = nextColor;
                     yield return new WaitForSeconds(time);
+
                     if (in_var + 1 < arr.Length) {
-                        
                         pillars[in_var + 1].GetComponent<Pillar>().Color = checkColor;
-                        
                         yield return new WaitForSeconds(time);
                     }
 
                     if (out_var < arr.Length - 1) {
-
                         pillars[out_var + 1].GetComponent<Pillar>().Color = tempColor;
                         yield return new WaitForSeconds(time);
                     }
