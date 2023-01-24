@@ -2396,6 +2396,7 @@ MonoBehaviour:
   nextColor: {fileID: 2100000, guid: 37ca2a070038b3f44890b824cca9c960, type: 2}
   checkColor: {fileID: 2100000, guid: e2223e31129a4fe4bb61866ad04e61d7, type: 2}
   swapColor: {fileID: 2100000, guid: de0711c89d0c68a4284c3108ee22aa8f, type: 2}
+  whiteColor: {fileID: 2100000, guid: 0914e9f407c7f4e4f935234608141c2d, type: 2}
 --- !u!114 &1458718198
 MonoBehaviour:
   m_ObjectHideFlags: 0
