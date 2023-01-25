@@ -10,6 +10,7 @@ public class ArrayController : MonoBehaviour {
     public int[] array;
     public GameObject pillarPrefab;
     public Button sortButton;
+    public Text sliderTextUI;
 
     bool running;
 
@@ -22,15 +23,12 @@ public class ArrayController : MonoBehaviour {
 
     Dropdown dropdown;
     ReadInput readSizeInput;
-    ReadSpeedInput readSpeedInput;
 
 
     private void Awake() {
         readSizeInput = GetComponent<ReadInput>();
-        readSpeedInput = GetComponent<ReadSpeedInput>();
         dropdown = GameObject.Find("List").GetComponent<Dropdown>();
         sortButton.interactable = false;
-
     }
 
     public void GenerateArray() {
@@ -77,25 +75,30 @@ public class ArrayController : MonoBehaviour {
         return true; // If this part has been reached, the array must be sorted.
     }
 
-
-
     public void OnSortClick() {
+        string sliderText = sliderTextUI.text;
+        sliderText = sliderText.Replace("%", string.Empty);
+        float sliderValue = (float)Convert.ToDouble(sliderText);
+
         if (dropdown.SortSelector() == 0) { //&& !IsSorted(this.array)) {
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
             //for (int i = 0; i < readSpeedInput.GetInput(); i++) {
-            StartCoroutine(BubbleSort(this.array, 0.01f / (float)readSpeedInput.GetInput()));
+            //StartCoroutine(BubbleSort(this.array, 0.01f / (float)readSpeedInput.GetInput()));
+            StartCoroutine(BubbleSort(this.array, 0.01f / sliderValue));
             //}
         } else if (dropdown.SortSelector() == 1) { //&& !IsSorted(this.array)) {
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
             //for (int i = 0; i < readSpeedInput.GetInput(); i++) {
-            StartCoroutine(SelectionSort(this.array, 0.01f / (float)readSpeedInput.GetInput()));
+            //StartCoroutine(SelectionSort(this.array, 0.01f / (float)readSpeedInput.GetInput()));
+            StartCoroutine(SelectionSort(this.array, 0.01f / sliderValue));
             //}
         } else if (dropdown.SortSelector() == 2) { // && !IsSorted(this.array)) {
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(InsertionSort(this.array, 0.01f / (float)readSpeedInput.GetInput()));
+            //StartCoroutine(InsertionSort(this.array, 0.01f / (float)readSpeedInput.GetInput()));
+            StartCoroutine(InsertionSort(this.array, 0.01f / sliderValue));
         }
     }
 
