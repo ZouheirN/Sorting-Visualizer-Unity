@@ -28,7 +28,7 @@ public class Pillar : MonoBehaviour
     void FixedUpdate()
     {
         //pivotPillar.transform.localScale = new Vector3((float)1 / size, value % 60, 1);
-        pivotPillar.transform.localScale = new Vector3((float)1 / size, arrayController.array[pos] % 60, 1);
+        pivotPillar.transform.localScale = new Vector3((float)1 / size, arrayController.array[pos] % 60 + 1, 1);
         pillar.GetComponent<MeshRenderer>().material = Color;
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class ReadSpeedInput : MonoBehaviour
 {
     private string input;
-    private int output;
+    private double output;
 
     GameObject warningText;
 
@@ -17,8 +17,8 @@ public class ReadSpeedInput : MonoBehaviour
 
     public void ReadSpeedInputFunc(string s) {
         input = s;
-        Debug.Log(Convert.ToInt32(input));
-        output = Convert.ToInt32(s);
+        Debug.Log(Convert.ToDouble(input));
+        output = Convert.ToDouble(s);
         if (output > 10) {
             warningText.SetActive(true);
         } else {
@@ -26,7 +26,7 @@ public class ReadSpeedInput : MonoBehaviour
         }
     }
 
-    public int GetInput() {
+    public double GetInput() {
         return output;
     }
 }
