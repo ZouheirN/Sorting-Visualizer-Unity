@@ -33,8 +33,9 @@ public class ArrayController : MonoBehaviour {
     public void GenerateArray() {
         sortButton.interactable = true;
         sortButton.GetComponentInChildren<Text>().text = "Sort Array";
-
-        running = false;
+        
+        StopAllCoroutines();
+        running = false; 
 
         this.array = new int[readSizeInput.GetInput()];
 
