@@ -47,9 +47,6 @@ public class ArrayController : MonoBehaviour {
             this.array[i] = UnityEngine.Random.Range(0, 60);
             var newObj = GameObject.Instantiate(pillarPrefab);
             newObj.transform.parent = GameObject.Find("Bar").transform;
-            /*newObj.transform.localPosition = new Vector3(-0.5f + denom, 0.5f,0);
-            newObj.transform.localScale = new Vector3((float)1/this.array.Length, this.array[i] % 60, 1);*/
-            //newObj.GetComponent<Pillar>().value = array[i];
             newObj.GetComponent<Pillar>().offset = denom;
             newObj.GetComponent<Pillar>().size = array.Length;
             newObj.GetComponent<Pillar>().pos = i;
@@ -68,11 +65,11 @@ public class ArrayController : MonoBehaviour {
             pillars[i].GetComponent<Pillar>().Color = checkColor;
             pillars[i + 1].GetComponent<Pillar>().Color = checkColor;
             if (a[i] > a[i + 1]) {
-                return false; // It is proven that the array is not sorted.
+                return false;
             }
         }
 
-        return true; // If this part has been reached, the array must be sorted.
+        return true;
     }
 
     public void OnSortClick() {
@@ -128,22 +125,22 @@ public class ArrayController : MonoBehaviour {
                     pillars[in_var].GetComponent<Pillar>().Color = nextColor;
 
                     if (arr[in_var] > arr[in_var + 1]) {
-                        yield return new WaitForSeconds(time);
+                        //yield return new WaitForSeconds(time);
                         int temp = arr[in_var];
-                        //pillars[in_var].GetComponent<Pillar>().Color = tempColor;
-                        
 
-                        yield return new WaitForSeconds(time);
+                        //yield return new WaitForSeconds(time);
                         arr[in_var] = arr[in_var + 1];
-                        pillars[in_var].GetComponent<Pillar>().Color = swapColor;
-                        //pillars[in_var].GetComponent<Pillar>().Color = swapColor;
 
-
-                        yield return new WaitForSeconds(time);
+                        //yield return new WaitForSeconds(time);
                         arr[in_var + 1] = temp;
 
                         pillars[in_var + 1].GetComponent<Pillar>().Color = tempColor;
                         pillars[in_var].GetComponent<Pillar>().Color = whiteColor;
+                        //yield return new WaitForSeconds(time);
+
+                    } else {
+                        if (in_var - 1 >= 0)
+                            pillars[in_var - 1].GetComponent<Pillar>().Color = whiteColor;
                     }
 
                     if (out_var - 1 == in_var)
@@ -177,8 +174,9 @@ public class ArrayController : MonoBehaviour {
                 yield return new WaitForSeconds(time);
                 min = out_var;
 
-                yield return new WaitForSeconds(time);
+                //yield return new WaitForSeconds(time);
                 for (in_var = out_var + 1; in_var < arr.Length; in_var++) {
+                    yield return new WaitForSeconds(time);
 
                     pillars[out_var].GetComponent<Pillar>().Color = nextColor;
                     if (out_var - 1 >= 0) {
@@ -190,11 +188,11 @@ public class ArrayController : MonoBehaviour {
                         pillars[in_var - 1].GetComponent<Pillar>().Color = whiteColor;
                     }
 
-                    yield return new WaitForSeconds(time);
+                    //yield return new WaitForSeconds(time);
                     if (arr[in_var] < arr[min]) {
                         pillars[min].GetComponent<Pillar>().Color = whiteColor;
                         pillars[in_var].GetComponent<Pillar>().Color = swapColor;
-                        yield return new WaitForSeconds(time);
+                        //yield return new WaitForSeconds(time);
                         min = in_var;
                     }
 
@@ -205,9 +203,9 @@ public class ArrayController : MonoBehaviour {
                 }
 
                 int temp = arr[out_var];
-                yield return new WaitForSeconds(time);
+                //yield return new WaitForSeconds(time);
                 arr[out_var] = arr[min];
-                yield return new WaitForSeconds(time);
+                //yield return new WaitForSeconds(time);
                 arr[min] = temp;
             }
 
@@ -234,39 +232,42 @@ public class ArrayController : MonoBehaviour {
                 int temp = arr[out_var];
                 pillars[out_var].GetComponent<Pillar>().Color = nextColor;
 
-                yield return new WaitForSeconds(time);
+                //yield return new WaitForSeconds(time);
                 in_var = out_var;
-                yield return new WaitForSeconds(time);
+                //yield return new WaitForSeconds(time);
 
                 while (in_var > 0 && arr[in_var - 1] >= temp) {
                     yield return new WaitForSeconds(time);
                     arr[in_var] = arr[in_var - 1];
 
                     pillars[in_var].GetComponent<Pillar>().Color = tempColor;
-                    yield return new WaitForSeconds(time);
+                    //yield return new WaitForSeconds(time);
 
                     if (in_var + 1 < arr.Length) {
                         pillars[in_var + 1].GetComponent<Pillar>().Color = checkColor;
-                        yield return new WaitForSeconds(time);
+                        //yield return new WaitForSeconds(time);
                     }
 
                     if (out_var < arr.Length - 1) {
                         pillars[out_var + 1].GetComponent<Pillar>().Color = nextColor;
-                        yield return new WaitForSeconds(time);
+                        //yield return new WaitForSeconds(time);
                     }
 
                     --in_var;
                 }
-                yield return new WaitForSeconds(time);
+                //yield return new WaitForSeconds(time);
                 arr[in_var] = temp;
 
-                if (IsSorted(this.array)) {
-                    running = false;
-                    sortButton.GetComponentInChildren<Text>().text = "Sorted!";
-                }
+                for (int i = 0; i < out_var; i++) 
+                    pillars[i].GetComponent<Pillar>().Color = checkColor;
+            
+            }
+
+            if (IsSorted(this.array)) {
+                running = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorted!";
             }
         }
     }
 
 } 
-
