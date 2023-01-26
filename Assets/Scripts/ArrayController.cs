@@ -24,7 +24,6 @@ public class ArrayController : MonoBehaviour {
     Dropdown dropdown;
     ReadInput readSizeInput;
 
-
     private void Awake() {
         readSizeInput = GetComponent<ReadInput>();
         dropdown = GameObject.Find("List").GetComponent<Dropdown>();
@@ -148,7 +147,6 @@ public class ArrayController : MonoBehaviour {
 
                     if (out_var - 1 == in_var)
                         pillars[out_var].GetComponent<Pillar>().Color = checkColor;
-
                 }
 
                 for (int i = 0; i < out_var; i++) {
