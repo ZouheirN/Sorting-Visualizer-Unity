@@ -14,7 +14,6 @@ Planned algorithms:
 
 <a href="https://zouheirn.github.io/Sorting-Visualizer-Unity/" target="_blank">Click here to try the WebGL version.</a>
 
-Note that the speed multiplier does not currently work on WebGL, will have to look into it later but I'll probably include a build release later.
 - - - -
 ## Screenshots
 
