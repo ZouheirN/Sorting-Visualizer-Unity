@@ -2,8 +2,15 @@
 
 I'm creating a sorting visualizer using Unity.
 
-It's still a work in progress. But it will include multiple sorting methods.
+Currently implemented algorithms:
+- Bubble Sort
+- Selection Sort
+- Insertion Sort
 
+Planned algorithms:
+- Quick Sort
+- Merge Sort
+- Shell Sort
 
 <a href="https://zouheirn.github.io/Sorting-Visualizer-Unity/" target="_blank">Click here to try the WebGL version.</a>
 
