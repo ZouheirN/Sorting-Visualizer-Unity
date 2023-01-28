@@ -12,7 +12,7 @@ Planned algorithms:
 - Merge Sort
 - Shell Sort
 
-<a href="https://zouheirn.github.io/Sorting-Visualizer-Unity/" target="_blank">Click here to try the WebGL version.</a>
+[<img src="https://img.shields.io/badge/-Try%20it%20now!-green" width="15%">](https://zouheirn.github.io/Sorting-Visualizer-Unity/)
 
 - - - -
 ## Screenshots
