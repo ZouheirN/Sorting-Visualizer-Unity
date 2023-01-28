@@ -6,8 +6,9 @@
     <title>Unity WebGL Player | Sorting Visualizer</title>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <canvas id="unity-canvas" width=1280 height=720 style="width: 1280px; height: 720px; background: #231F20"></canvas>
-    <div id="unityContainer" style = " ..... height:100%; aspect-ratio:16/9;"></div>
+    <div id="unity-container" style="position: absolute; width: 100%; height: 100%">
+      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} style="width: 100%; height: 100%"></canvas>
+    </div>
     <script src="Build/docs.loader.js"></script>
     <script>
       
