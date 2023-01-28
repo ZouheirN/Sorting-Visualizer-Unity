@@ -16,6 +16,8 @@ Planned algorithms:
 
 Note that the speed multiplier does not currently work on WebGL, will have to look into it later but I'll probably include a build release later.
 
+- - - -
+
 ## Screenshots
 
 <img src="https://user-images.githubusercontent.com/61628216/215164923-82e99859-61c6-48ee-867a-fe5721b10c79.PNG" width=70% height=70%>
