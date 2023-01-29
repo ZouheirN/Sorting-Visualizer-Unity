@@ -6,10 +6,10 @@ Currently implemented algorithms:
 - Bubble Sort
 - Selection Sort
 - Insertion Sort
+- Merge Sort (Works, but I still need to fix the colors)
 
 Planned algorithms:
 - Quick Sort
-- Merge Sort
 - Shell Sort
 
 [<img src="https://img.shields.io/badge/-Try%20it%20now!-green" width="15%">](https://zouheirn.github.io/Sorting-Visualizer-Unity/)
