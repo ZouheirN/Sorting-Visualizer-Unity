@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -313,6 +314,12 @@ public class ArrayController : MonoBehaviour {
             for (int i = 0; i < a.Length; i++) {
                 yield return new WaitForSeconds(time);
                 a[i] = temp[i];
+                if (pillars[i].GetComponent<Pillar>().Color == tempColor) {
+                    for (int j = 0; j < i; j++) {
+                        pillars[j].GetComponent<Pillar>().Color = whiteColor;
+                    }
+                }
+                pillars[i].GetComponent<Pillar>().Color = swapColor;
             }
         }
 
