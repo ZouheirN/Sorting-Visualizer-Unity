@@ -314,7 +314,7 @@ public class ArrayController : MonoBehaviour {
             for (int i = 0; i < a.Length; i++) {
                 yield return new WaitForSeconds(time);
                 a[i] = temp[i];
-                if (pillars[i].GetComponent<Pillar>().Color == tempColor) {
+                if (pillars[i].GetComponent<Pillar>().Color == tempColor || pillars[i].GetComponent<Pillar>().Color == nextColor) {
                     for (int j = 0; j < i; j++) {
                         pillars[j].GetComponent<Pillar>().Color = whiteColor;
                     }
