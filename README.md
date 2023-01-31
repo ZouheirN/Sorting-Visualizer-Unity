@@ -2,15 +2,24 @@
 
 I'm creating a sorting visualizer using Unity.
 
+## Features
+
+- Timer
+- Colors to see how the sorting works
+- Adjustable speed
+
+<br>
+
 Currently implemented algorithms:
 - Bubble Sort
 - Selection Sort
 - Insertion Sort
-- Merge Sort (Works, but I still need to fix the colors)
+- Merge Sort
+- Shell Sort (might change the colors not sure yet)
 
 Planned algorithms:
 - Quick Sort
-- Shell Sort
+
 
 [<img src="https://img.shields.io/badge/-Try%20it%20now!-green" width="15%">](https://zouheirn.github.io/Sorting-Visualizer-Unity/)
 
