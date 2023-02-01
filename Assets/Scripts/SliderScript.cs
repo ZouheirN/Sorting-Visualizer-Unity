@@ -13,9 +13,9 @@ public class SliderScript : MonoBehaviour
     {
         _slider.onValueChanged.AddListener((v) => {
             if (v < 10)
-                _sliderText.text = (v / 10).ToString("0.0") + "%";
+                _sliderText.text = "x" + (v / 10).ToString("0.0");
             else
-                _sliderText.text = (v % 10 + 1).ToString("0.0") + "%";
+                _sliderText.text = "x" + (v % 10 + 1).ToString("0.0");
         });
     }
 
