@@ -16,8 +16,6 @@ Currently implemented algorithms:
 - Insertion Sort
 - Merge Sort
 - Shell Sort (might change the colors not sure yet)
-
-Planned algorithms:
 - Quick Sort
 
 
