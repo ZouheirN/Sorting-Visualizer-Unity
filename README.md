@@ -1,6 +1,12 @@
 # Sorting-Visualizer-Unity
 
-I'm creating a sorting visualizer using Unity.
+A Unity program to view how sorting alogorithms actually sort arrays.
+
+<p align="center">
+<a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FZouheirN%2FSorting-Visualizer-Unity&count_bg=%2300B2EE&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false"/></a>
+</p>
+
+[<img src="https://img.shields.io/badge/-Try%20it%20now!-green" width="15%">](https://zouheirn.github.io/Sorting-Visualizer-Unity/)
 
 ## Features
 
@@ -18,8 +24,6 @@ Currently implemented algorithms:
 - Shell Sort (might change the colors not sure yet)
 - Quick Sort
 
-
-[<img src="https://img.shields.io/badge/-Try%20it%20now!-green" width="15%">](https://zouheirn.github.io/Sorting-Visualizer-Unity/)
 
 - - - -
 ## Screenshots
