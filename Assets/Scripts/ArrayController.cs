@@ -12,6 +12,8 @@ public class ArrayController : MonoBehaviour {
     public Text sliderTextUI;
 
     public bool running;
+    private float sliderValue;
+    private float time;
 
     [Header("Colors")]
     public Material tempColor;
@@ -29,6 +31,13 @@ public class ArrayController : MonoBehaviour {
         dropdown = GameObject.Find("List").GetComponent<Dropdown>();
         sortButton.interactable = false;
         timer = GameObject.Find("TimerManager").GetComponent<Timer>();
+    }
+
+    private void Update() {
+        string sliderText = sliderTextUI.text;
+        List<char> charsToRemove = new List<char>() { 'x', '%' };
+        sliderValue = (float)Convert.ToDouble(String.Concat(sliderText.Split(charsToRemove.ToArray())));
+        time = 0.01f / sliderValue;
     }
 
     public void GenerateArray() {
@@ -95,36 +104,37 @@ public class ArrayController : MonoBehaviour {
         running = true;
 
         /*string sliderText = sliderTextUI.text;
-        sliderText = sliderText.Replace("x", string.Empty);
-        float sliderValue = (float)Convert.ToDouble(sliderText);*/
-        string sliderText = sliderTextUI.text;
         List<char> charsToRemove = new List<char>() { 'x', '%'};
-        float sliderValue = (float)Convert.ToDouble(String.Concat(sliderText.Split(charsToRemove.ToArray())));
+        float sliderValue = (float)Convert.ToDouble(String.Concat(sliderText.Split(charsToRemove.ToArray())));*/
 
         if (dropdown.SortSelector() == 0) {
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(BubbleSort(this.array, 0.01f / sliderValue));
+            StartCoroutine(BubbleSort(this.array));
         } else if (dropdown.SortSelector() == 1) {
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(SelectionSort(this.array, 0.01f / sliderValue));
+            StartCoroutine(SelectionSort(this.array));
         } else if (dropdown.SortSelector() == 2) {
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(InsertionSort(this.array, 0.01f / sliderValue));
+            StartCoroutine(InsertionSort(this.array));
         } else if (dropdown.SortSelector() == 3) {
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(BottomUpMergeSort(this.array, 0.01f / sliderValue));
+            StartCoroutine(BottomUpMergeSort(this.array));
         } else if (dropdown.SortSelector() == 4) {
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(ShellSort(this.array, 0.01f / sliderValue));
+            StartCoroutine(ShellSort(this.array));
         } else if (dropdown.SortSelector() == 5) {
             sortButton.interactable = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(QuickSort(this.array, 0, array.Length - 1, 0.01f / sliderValue));
+            StartCoroutine(QuickSort(this.array, 0, array.Length - 1));
+        } else if (dropdown.SortSelector() == 6) {
+            sortButton.interactable = false;
+            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+            StartCoroutine(HeapSort(this.array, array.Length));
         }
     }
 
@@ -135,7 +145,7 @@ public class ArrayController : MonoBehaviour {
             Destroy(oneObject);
     }
 
-    IEnumerator BubbleSort(int[] arr, float time) {
+    IEnumerator BubbleSort(int[] arr) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
@@ -182,7 +192,7 @@ public class ArrayController : MonoBehaviour {
 
     }
 
-    IEnumerator SelectionSort(int[] arr, float time) {
+    IEnumerator SelectionSort(int[] arr) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
@@ -232,7 +242,7 @@ public class ArrayController : MonoBehaviour {
 
     }
 
-    IEnumerator InsertionSort(int[] arr, float time) {
+    IEnumerator InsertionSort(int[] arr) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
@@ -278,9 +288,7 @@ public class ArrayController : MonoBehaviour {
 
     }
 
-    IEnumerator Wait(float time) { yield return new WaitForSeconds(time); }
-
-    IEnumerator BottomUpMergeSort(int[] a, float time) {
+    IEnumerator BottomUpMergeSort(int[] a) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
@@ -292,6 +300,7 @@ public class ArrayController : MonoBehaviour {
             for (int i = 0; i < pillars.Count; i++) {
                 pillars[i].GetComponent<Pillar>().Color = whiteColor;
             }
+
             for (int eachRunStart = 0; eachRunStart < a.Length; eachRunStart = eachRunStart + 2 * runWidth) {
                 yield return new WaitForSeconds(time);
                 int start = eachRunStart;
@@ -310,18 +319,28 @@ public class ArrayController : MonoBehaviour {
 
                 pillars[mid].GetComponent<Pillar>().Color = tempColor;
 
-                this.Merge(a, start, mid, end, temp, time);
+                this.Merge(a, start, mid, end, temp);
+                
             }
 
             for (int i = 0; i < a.Length; i++) {
                 yield return new WaitForSeconds(time);
                 a[i] = temp[i];
 
-                if (pillars[i].GetComponent<Pillar>().Color == tempColor || pillars[i].GetComponent<Pillar>().Color == nextColor) {
-                    for (int j = 0; j < i; j++) {
-                        pillars[j].GetComponent<Pillar>().Color = whiteColor;
+                if (runWidth > 1) {
+                    if (pillars[i].GetComponent<Pillar>().Color == nextColor) {
+                        for (int j = 0; j < i; j++) {
+                            pillars[j].GetComponent<Pillar>().Color = whiteColor;
+                        }
+                    }
+                } else {
+                    if (pillars[i].GetComponent<Pillar>().Color == tempColor || pillars[i].GetComponent<Pillar>().Color == nextColor) {
+                        for (int j = 0; j < i; j++) {
+                            pillars[j].GetComponent<Pillar>().Color = whiteColor;
+                        }
                     }
                 }
+
                 pillars[i].GetComponent<Pillar>().Color = swapColor;
             }
         }
@@ -333,7 +352,7 @@ public class ArrayController : MonoBehaviour {
         }
     }
 
-    void Merge(int[] a, int start, int mid, int end, int[] temp, float time) {
+    void Merge(int[] a, int start, int mid, int end, int[] temp) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
@@ -376,7 +395,7 @@ public class ArrayController : MonoBehaviour {
         Assert.IsTrue(j == end + 1);
     }
 
-    IEnumerator ShellSort(int[] arr, float time) {
+    IEnumerator ShellSort(int[] arr) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
@@ -431,7 +450,7 @@ public class ArrayController : MonoBehaviour {
         }
     }
 
-    int partition(int[] a, int low, int high, float time) {
+    int partition(int[] a, int low, int high) {
         int pivot = a[high];
         int i = low - 1;
         int temp;
@@ -454,7 +473,7 @@ public class ArrayController : MonoBehaviour {
         return i + 1;
     }
 
-    IEnumerator QuickSort(int[] a, int low, int high, float time) {
+    IEnumerator QuickSort(int[] a, int low, int high) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
@@ -533,6 +552,85 @@ public class ArrayController : MonoBehaviour {
             running = false;
             sortButton.GetComponentInChildren<Text>().text = "Sorted!";
             timer.timerText.color = new Color32(27, 255, 0, 255);
+        }
+    }
+
+    public void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+
+    IEnumerator HeapSort(int[] arr, int n) {
+        List<GameObject> pillars = new List<GameObject>();
+        foreach (Transform tran in GameObject.Find("Bar").transform) {
+            pillars.Add(tran.gameObject);
+        }
+
+        yield return StartCoroutine(buildMaxHeap(arr, n));
+
+        for (int i = n - 1; i > 0; i--) {
+            pillars[i].GetComponent<Pillar>().Color = checkColor;
+            yield return new WaitForSeconds(time);
+            // swap value of first indexed
+            // with last indexed
+            swap(arr, 0, i);
+
+            // maintaining heap property
+            // after each swapping
+            int j = 0, index;
+
+            do {
+                index = (2 * j + 1);
+
+                // if left child is smaller than
+                // right child point index variable
+                // to right child
+                if (index < (i - 1) && arr[index] <
+                                       arr[index + 1])
+                    index++;
+
+                // if parent is smaller than child
+                // then swapping parent with child
+                // having higher value
+                if (index < i && arr[j] < arr[index])
+                    swap(arr, j, index);
+
+                j = index;
+                yield return new WaitForSeconds(time);
+            } while (index < i);
+        }
+
+        if (IsSorted(this.array)) {
+            running = false;
+            sortButton.GetComponentInChildren<Text>().text = "Sorted!";
+            timer.timerText.color = new Color32(27, 255, 0, 255);
+        }
+    }
+
+    IEnumerator buildMaxHeap(int[] arr, int n) {
+        List<GameObject> pillars = new List<GameObject>();
+        foreach (Transform tran in GameObject.Find("Bar").transform) {
+            pillars.Add(tran.gameObject);
+        }
+
+        for (int i = 1; i < n; i++) {
+            yield return new WaitForSeconds(time);
+            pillars[i].GetComponent<Pillar>().Color = tempColor;
+            pillars[i-1].GetComponent<Pillar>().Color = whiteColor;
+
+            // if child is bigger than parent
+            if (arr[i] > arr[(i - 1) / 2]) {
+                int j = i;
+
+                // swap child and parent until
+                // parent is smaller
+                while (arr[j] > arr[(j - 1) / 2]) {
+                    yield return new WaitForSeconds(time);
+                    swap(arr, j, (j - 1) / 2);
+                    j = (j - 1) / 2;
+                }
+            }
         }
     }
 }
