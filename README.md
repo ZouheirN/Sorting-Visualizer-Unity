@@ -23,8 +23,9 @@ Currently implemented algorithms:
 - Selection Sort
 - Insertion Sort
 - Merge Sort
-- Shell Sort (might change the colors not sure yet)
+- Shell Sort
 - Quick Sort
+- Heap Sort (Still WIP)
 
 
 - - - -
