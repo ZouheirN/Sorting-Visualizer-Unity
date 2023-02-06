@@ -26,6 +26,7 @@ Currently implemented algorithms:
 - Shell Sort
 - Quick Sort
 - Heap Sort (Still WIP)
+- Radix Sort
 
 
 - - - -
