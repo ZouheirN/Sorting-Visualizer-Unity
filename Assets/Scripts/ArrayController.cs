@@ -103,38 +103,47 @@ public class ArrayController : MonoBehaviour {
         timer.currentTime = 0;
         running = true;
 
-        /*string sliderText = sliderTextUI.text;
-        List<char> charsToRemove = new List<char>() { 'x', '%'};
-        float sliderValue = (float)Convert.ToDouble(String.Concat(sliderText.Split(charsToRemove.ToArray())));*/
-
-        if (dropdown.SortSelector() == 0) {
-            sortButton.interactable = false;
-            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(BubbleSort(this.array));
-        } else if (dropdown.SortSelector() == 1) {
-            sortButton.interactable = false;
-            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(SelectionSort(this.array));
-        } else if (dropdown.SortSelector() == 2) {
-            sortButton.interactable = false;
-            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(InsertionSort(this.array));
-        } else if (dropdown.SortSelector() == 3) {
-            sortButton.interactable = false;
-            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(BottomUpMergeSort(this.array));
-        } else if (dropdown.SortSelector() == 4) {
-            sortButton.interactable = false;
-            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(ShellSort(this.array));
-        } else if (dropdown.SortSelector() == 5) {
-            sortButton.interactable = false;
-            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(QuickSort(this.array, 0, array.Length - 1));
-        } else if (dropdown.SortSelector() == 6) {
-            sortButton.interactable = false;
-            sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-            StartCoroutine(HeapSort(this.array, array.Length));
+        switch (dropdown.SortSelector()) {
+            case 0:
+                sortButton.interactable = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+                StartCoroutine(BubbleSort(array));
+                break;
+            case 1:
+                sortButton.interactable = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+                StartCoroutine(SelectionSort(array));
+                break;
+            case 2:
+                sortButton.interactable = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+                StartCoroutine(InsertionSort(array));
+                break;
+            case 3:
+                sortButton.interactable = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+                StartCoroutine(BottomUpMergeSort(array));
+                break;
+            case 4:
+                sortButton.interactable = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+                StartCoroutine(ShellSort(array));
+                break;
+            case 5:
+                sortButton.interactable = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+                StartCoroutine(QuickSort(array, 0, array.Length - 1));
+                break;
+            case 6:
+                sortButton.interactable = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+                StartCoroutine(HeapSort(array, array.Length));
+                break;
+            case 7:
+                sortButton.interactable = false;
+                sortButton.GetComponentInChildren<Text>().text = "Sorting...";
+                StartCoroutine(RadixSort(array));
+                break;
         }
     }
 
@@ -569,11 +578,17 @@ public class ArrayController : MonoBehaviour {
 
         yield return StartCoroutine(buildMaxHeap(arr, n));
 
+        for (int i = 0; i < arr.Length; i++) {
+            pillars[i].GetComponent<Pillar>().Color = whiteColor;
+        }
+
         for (int i = n - 1; i > 0; i--) {
-            pillars[i].GetComponent<Pillar>().Color = checkColor;
+            pillars[i].GetComponent<Pillar>().Color = swapColor;
+            pillars[i-1].GetComponent<Pillar>().Color = nextColor;
             yield return new WaitForSeconds(time);
             // swap value of first indexed
             // with last indexed
+            
             swap(arr, 0, i);
 
             // maintaining heap property
@@ -582,7 +597,7 @@ public class ArrayController : MonoBehaviour {
 
             do {
                 index = (2 * j + 1);
-
+                
                 // if left child is smaller than
                 // right child point index variable
                 // to right child
@@ -597,6 +612,11 @@ public class ArrayController : MonoBehaviour {
                     swap(arr, j, index);
 
                 j = index;
+
+                if (index >= 0 && index < arr.Length) {
+                    pillars[index].GetComponent<Pillar>().Color = tempColor;
+                }
+               
                 yield return new WaitForSeconds(time);
             } while (index < i);
         }
@@ -622,15 +642,74 @@ public class ArrayController : MonoBehaviour {
             // if child is bigger than parent
             if (arr[i] > arr[(i - 1) / 2]) {
                 int j = i;
-
+                pillars[(i - 1) / 2].GetComponent<Pillar>().Color = nextColor;
                 // swap child and parent until
                 // parent is smaller
                 while (arr[j] > arr[(j - 1) / 2]) {
+                    
                     yield return new WaitForSeconds(time);
                     swap(arr, j, (j - 1) / 2);
                     j = (j - 1) / 2;
                 }
             }
+        }
+    }
+
+    IEnumerator RadixSort(int[] Array) {
+        int n = Array.Length;
+        int max = Array[0];
+
+        //find largest element in the Array
+        for (int i = 1; i < n; i++) {
+            if (max < Array[i])
+                max = Array[i];
+        }
+
+        //Counting sort is performed based on place. 
+        //like ones place, tens place and so on.
+        for (int place = 1; max / place > 0; place *= 10) {
+            yield return new WaitForSeconds(time);
+            yield return StartCoroutine(CountingSort(Array, place));
+        }
+
+        if (IsSorted(this.array)) {
+            running = false;
+            sortButton.GetComponentInChildren<Text>().text = "Sorted!";
+            timer.timerText.color = new Color32(27, 255, 0, 255);
+        }
+    }
+
+    IEnumerator CountingSort(int[] Array, int place) {
+        int n = Array.Length;
+        int[] output = new int[n];
+
+        //range of the number is 0-9 for each place considered.
+        int[] freq = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        //count number of occurrences in freq array
+        for (int i = 0; i < n; i++) {
+            yield return new WaitForSeconds(time);
+            freq[(Array[i] / place) % 10]++;
+        }
+
+        //Change count[i] so that count[i] now contains actual 
+        //position of this digit in output[] 
+        for (int i = 1; i < 10; i++) {
+            yield return new WaitForSeconds(time);
+            freq[i] += freq[i - 1];
+        }
+
+        //Build the output array 
+        for (int i = n - 1; i >= 0; i--) {
+            yield return new WaitForSeconds(time);
+            output[freq[(Array[i] / place) % 10] - 1] = Array[i];
+            freq[(Array[i] / place) % 10]--;
+        }
+
+        //Copy the output array to the input Array, Now the Array will 
+        //contain sorted array based on digit at specified place
+        for (int i = 0; i < n; i++) {
+            yield return new WaitForSeconds(time);
+            Array[i] = output[i];
         }
     }
 }
