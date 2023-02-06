@@ -656,18 +656,28 @@ public class ArrayController : MonoBehaviour {
     }
 
     IEnumerator RadixSort(int[] Array) {
+        List<GameObject> pillars = new List<GameObject>();
+        foreach (Transform tran in GameObject.Find("Bar").transform) {
+            pillars.Add(tran.gameObject);
+        }
+
         int n = Array.Length;
         int max = Array[0];
 
         //find largest element in the Array
         for (int i = 1; i < n; i++) {
-            if (max < Array[i])
+            if (max < Array[i]) {
                 max = Array[i];
+            }
         }
 
         //Counting sort is performed based on place. 
         //like ones place, tens place and so on.
         for (int place = 1; max / place > 0; place *= 10) {
+            if (place >= 0 && place < Array.Length) {
+                pillars[place].GetComponent<Pillar>().Color = nextColor;
+            }
+
             yield return new WaitForSeconds(time);
             yield return StartCoroutine(CountingSort(Array, place));
         }
@@ -680,6 +690,11 @@ public class ArrayController : MonoBehaviour {
     }
 
     IEnumerator CountingSort(int[] Array, int place) {
+        List<GameObject> pillars = new List<GameObject>();
+        foreach (Transform tran in GameObject.Find("Bar").transform) {
+            pillars.Add(tran.gameObject);
+        }
+
         int n = Array.Length;
         int[] output = new int[n];
 
@@ -688,7 +703,12 @@ public class ArrayController : MonoBehaviour {
         //count number of occurrences in freq array
         for (int i = 0; i < n; i++) {
             yield return new WaitForSeconds(time);
+            pillars[i].GetComponent<Pillar>().Color = tempColor;
             freq[(Array[i] / place) % 10]++;
+        }
+
+        for (int i = 0; i < Array.Length; i++) {
+            pillars[i].GetComponent<Pillar>().Color = whiteColor;
         }
 
         //Change count[i] so that count[i] now contains actual 
@@ -703,6 +723,11 @@ public class ArrayController : MonoBehaviour {
             yield return new WaitForSeconds(time);
             output[freq[(Array[i] / place) % 10] - 1] = Array[i];
             freq[(Array[i] / place) % 10]--;
+            pillars[i].GetComponent<Pillar>().Color = tempColor;
+        }
+
+        for (int i = 0; i < Array.Length; i++) {
+            pillars[i].GetComponent<Pillar>().Color = whiteColor;
         }
 
         //Copy the output array to the input Array, Now the Array will 
@@ -710,6 +735,7 @@ public class ArrayController : MonoBehaviour {
         for (int i = 0; i < n; i++) {
             yield return new WaitForSeconds(time);
             Array[i] = output[i];
+            pillars[i].GetComponent<Pillar>().Color = tempColor;
         }
     }
 }
