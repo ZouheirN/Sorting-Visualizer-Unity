@@ -703,18 +703,20 @@ public class ArrayController : MonoBehaviour {
         //count number of occurrences in freq array
         for (int i = 0; i < n; i++) {
             yield return new WaitForSeconds(time);
-            pillars[i].GetComponent<Pillar>().Color = tempColor;
+            if (pillars[i].GetComponent<Pillar>().Color != nextColor)
+                pillars[i].GetComponent<Pillar>().Color = swapColor;
             freq[(Array[i] / place) % 10]++;
         }
 
         for (int i = 0; i < Array.Length; i++) {
-            pillars[i].GetComponent<Pillar>().Color = whiteColor;
+            if (pillars[i].GetComponent<Pillar>().Color != nextColor)
+                pillars[i].GetComponent<Pillar>().Color = whiteColor;
         }
 
         //Change count[i] so that count[i] now contains actual 
         //position of this digit in output[] 
         for (int i = 1; i < 10; i++) {
-            yield return new WaitForSeconds(time);
+            //yield return new WaitForSeconds(time);
             freq[i] += freq[i - 1];
         }
 
@@ -723,11 +725,13 @@ public class ArrayController : MonoBehaviour {
             yield return new WaitForSeconds(time);
             output[freq[(Array[i] / place) % 10] - 1] = Array[i];
             freq[(Array[i] / place) % 10]--;
-            pillars[i].GetComponent<Pillar>().Color = tempColor;
+            if (pillars[i].GetComponent<Pillar>().Color != nextColor)
+                pillars[i].GetComponent<Pillar>().Color = tempColor;
         }
 
         for (int i = 0; i < Array.Length; i++) {
-            pillars[i].GetComponent<Pillar>().Color = whiteColor;
+            if (pillars[i].GetComponent<Pillar>().Color != nextColor)
+                pillars[i].GetComponent<Pillar>().Color = whiteColor;
         }
 
         //Copy the output array to the input Array, Now the Array will 
