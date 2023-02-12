@@ -8,7 +8,7 @@ A Unity program to view how sorting alogorithms actually sort arrays.
 
 [<img src="https://img.shields.io/badge/-Try%20it%20now!-green" width="15%">](https://zouheirn.github.io/Sorting-Visualizer-Unity/)
 <br>
-Download Link for Windows build soon!
+[<img src="https://img.shields.io/badge/-Download-purple" width = "15%">](https://github.com/ZouheirN/Sorting-Visualizer-Unity/releases)
 
 ## Features
 
