@@ -137,7 +137,7 @@ public class ArrayController : MonoBehaviour {
             case 6:
                 sortButton.interactable = false;
                 sortButton.GetComponentInChildren<Text>().text = "Sorting...";
-                StartCoroutine(HeapSort(array, array.Length));
+                StartCoroutine(HeapSort(array));
                 break;
             case 7:
                 sortButton.interactable = false;
@@ -459,29 +459,6 @@ public class ArrayController : MonoBehaviour {
         }
     }
 
-    int partition(int[] a, int low, int high) {
-        int pivot = a[high];
-        int i = low - 1;
-        int temp;
-
-        for (int j = low; j <= high - 1; j++) {
-            
-            if (a[j] <= pivot) {
-
-                i++;
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
-        }
-
-        temp = a[i + 1];
-        a[i + 1] = a[high];
-        a[high] = temp;
-
-        return i + 1;
-    }
-
     IEnumerator QuickSort(int[] a, int low, int high) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
@@ -564,61 +541,43 @@ public class ArrayController : MonoBehaviour {
         }
     }
 
-    public void swap(int[] a, int i, int j) {
-        int temp = a[i];
-        a[i] = a[j];
-        a[j] = temp;
-    }
-
-    IEnumerator HeapSort(int[] arr, int n) {
+    IEnumerator HeapSort(int[] arr) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
         }
 
-        yield return StartCoroutine(buildMaxHeap(arr, n));
+        int N = arr.Length;
 
-        for (int i = 0; i < arr.Length; i++) {
-            pillars[i].GetComponent<Pillar>().Color = whiteColor;
+        // Build heap (rearrange array)
+        for (int i = N / 2 - 1; i >= 0; i--) {
+            yield return new WaitForSeconds(time);
+            yield return heapify(arr, N, i);
         }
 
-        for (int i = n - 1; i > 0; i--) {
-            pillars[i].GetComponent<Pillar>().Color = swapColor;
-            pillars[i-1].GetComponent<Pillar>().Color = nextColor;
+        for (int j = 0; j < arr.Length; j++) {
+            pillars[j].GetComponent<Pillar>().Color = whiteColor;
+        }
+
+        // One by one extract an element from heap
+        for (int i = N - 1; i > 0; i--) {
             yield return new WaitForSeconds(time);
-            // swap value of first indexed
-            // with last indexed
-            
-            swap(arr, 0, i);
 
-            // maintaining heap property
-            // after each swapping
-            int j = 0, index;
+            // Move current root to end
+            int temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
 
-            do {
-                index = (2 * j + 1);
-                
-                // if left child is smaller than
-                // right child point index variable
-                // to right child
-                if (index < (i - 1) && arr[index] <
-                                       arr[index + 1])
-                    index++;
+            pillars[i].GetComponent<Pillar>().Color = checkColor;
 
-                // if parent is smaller than child
-                // then swapping parent with child
-                // having higher value
-                if (index < i && arr[j] < arr[index])
-                    swap(arr, j, index);
-
-                j = index;
-
-                if (index >= 0 && index < arr.Length) {
-                    pillars[index].GetComponent<Pillar>().Color = tempColor;
+            for (int j = 0; j < arr.Length; j++) {
+                if (pillars[j].GetComponent<Pillar>().Color != checkColor) {
+                    pillars[j].GetComponent<Pillar>().Color = whiteColor;
                 }
-               
-                yield return new WaitForSeconds(time);
-            } while (index < i);
+            }
+
+            // call max heapify on the reduced heap
+            yield return heapify(arr, i, 0);
         }
 
         if (IsSorted(this.array)) {
@@ -628,30 +587,36 @@ public class ArrayController : MonoBehaviour {
         }
     }
 
-    IEnumerator buildMaxHeap(int[] arr, int n) {
+    IEnumerator heapify(int[] arr, int N, int i) {
         List<GameObject> pillars = new List<GameObject>();
         foreach (Transform tran in GameObject.Find("Bar").transform) {
             pillars.Add(tran.gameObject);
         }
 
-        for (int i = 1; i < n; i++) {
-            yield return new WaitForSeconds(time);
-            pillars[i].GetComponent<Pillar>().Color = tempColor;
-            pillars[i-1].GetComponent<Pillar>().Color = whiteColor;
+        int largest = i; // Initialize largest as root
+        int l = 2 * i + 1; // left = 2*i + 1
+        int r = 2 * i + 2; // right = 2*i + 2
 
-            // if child is bigger than parent
-            if (arr[i] > arr[(i - 1) / 2]) {
-                int j = i;
-                pillars[(i - 1) / 2].GetComponent<Pillar>().Color = nextColor;
-                // swap child and parent until
-                // parent is smaller
-                while (arr[j] > arr[(j - 1) / 2]) {
-                    
-                    yield return new WaitForSeconds(time);
-                    swap(arr, j, (j - 1) / 2);
-                    j = (j - 1) / 2;
-                }
-            }
+        // If left child is larger than root
+        if (l < N && arr[l] > arr[largest])
+            largest = l;
+
+        // If right child is larger than largest so far
+        if (r < N && arr[r] > arr[largest])
+            largest = r;
+
+        // If largest is not root
+        if (largest != i) {
+            pillars[i].GetComponent<Pillar>().Color = tempColor;
+
+            int swap = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = swap;
+
+            pillars[largest].GetComponent<Pillar>().Color = nextColor;
+
+            // Recursively heapify the affected sub-tree
+            yield return heapify(arr, N, largest);
         }
     }
 
