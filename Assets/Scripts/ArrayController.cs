@@ -568,10 +568,14 @@ public class ArrayController : MonoBehaviour {
             arr[0] = arr[i];
             arr[i] = temp;
 
-            pillars[i].GetComponent<Pillar>().Color = checkColor;
+            pillars[i].GetComponent<Pillar>().Color = nextColor;
+            if (i+1 < arr.Length) {
+                pillars[i + 1].GetComponent<Pillar>().Color = checkColor;
+
+            }
 
             for (int j = 0; j < arr.Length; j++) {
-                if (pillars[j].GetComponent<Pillar>().Color != checkColor) {
+                if (pillars[j].GetComponent<Pillar>().Color != checkColor && pillars[j].GetComponent<Pillar>().Color != nextColor) {
                     pillars[j].GetComponent<Pillar>().Color = whiteColor;
                 }
             }
@@ -613,7 +617,7 @@ public class ArrayController : MonoBehaviour {
             arr[i] = arr[largest];
             arr[largest] = swap;
 
-            pillars[largest].GetComponent<Pillar>().Color = nextColor;
+            pillars[largest].GetComponent<Pillar>().Color = swapColor;
 
             // Recursively heapify the affected sub-tree
             yield return heapify(arr, N, largest);
