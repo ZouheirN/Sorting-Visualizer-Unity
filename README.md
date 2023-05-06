@@ -29,7 +29,7 @@ Currently implemented algorithms:
 - Radix Sort
 
 
-- - - -
+
 ## Screenshots
 
 <img src="https://user-images.githubusercontent.com/61628216/216364077-cf0f8ed1-78d1-462d-9063-9a49f0c6d34a.PNG" width=70% height=70%>
